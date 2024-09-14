@@ -3,11 +3,11 @@
 
 
 ## Agenda
-### [Les1-tutorial](langchain-content/Les1-tutorial)  
+### [Les1-tutorial](Les1-tutorial)  
 簡単なLangchainの使い方について学ぶ。  
 該当講座：Part5 ~ 11
 
-### [Les2-Thirdparties-agent](langchain-content/Les2-Thirdparties-agent)  
+### [Les2-Thirdparties-agent](Les2-Thirdparties-agent)  
 スクレイピングしたLinkedinのjsonデータを基に、LLMに回答をもらう  
 該当講座：Part12 ~ 13
 
