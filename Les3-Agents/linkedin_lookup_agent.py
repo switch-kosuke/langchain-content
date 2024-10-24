@@ -6,7 +6,7 @@ from langchain.agents import (
     AgentExecutor,
 )
 from langchain_core.tools import Tool
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
@@ -21,7 +21,14 @@ def lookup(name: str) -> str:
     #     model_name="gpt-3.5-turbo",
     #     openai_api_key=os.environ["OPENAI_API_KEY"],
     # )
-    llm = ChatOllama(model="llama3")
+    # llm = ChatOllama(model="llama3")
+    llm = AzureChatOpenAI(
+        azure_endpoint=api_base,
+        openai_api_version=api_version,
+        deployment_name=deployment_name,
+        openai_api_key=api_key,
+        openai_api_type="azure",
+    )
 
     template = """given the full name {name_of_person} I want you to get it me a link to their Linkedin profile page.
                           Your answer should contain only a URL"""

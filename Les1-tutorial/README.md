@@ -99,10 +99,15 @@ OSSのモデルには、Llama, mistral等様々なものがある。
 
 - Installing Ollama  
     + [こちら](https://ollama.com/)のサイトからOllamaをインストール
+        [参考](https://medium.com/@suryasekhar/how-to-run-ollama-on-windows-10-using-wsl-262355cd809c)
+
+    
     + llama3をインストールする
         ```terminal
         $ ollama run llama3  
         ```    
+        もし、Error: pull model manifest: Get "https://registry.ollama.ai/v2/library/llama3/manifests/latest": tls: failed to verify certificate: x509: certificate signed by unknown authorityが発生した場合  
+        -> VPN接続・社内LANから接続解除
     + コード内のllmを変更するのみ（超簡単）
         ```python
         llm = ChatOllama(model="llama3")
@@ -111,3 +116,5 @@ OSSのモデルには、Llama, mistral等様々なものがある。
         ```
 
         [StrOutputParser](https://zenn.dev/os1ma/articles/acd3472c3a6755)は、ChatOpenAI などのチャットモデルの出力である AIMessage などを文字列に変換するために使われます。
+
+    
