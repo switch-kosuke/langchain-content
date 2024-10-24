@@ -22,8 +22,11 @@ def lookup(name: str) -> str:
     #     openai_api_key=os.environ["OPENAI_API_KEY"],
     # )
     # llm = ChatOllama(model="llama3")
+
+    
+    
     llm = AzureChatOpenAI(
-        azure_endpoint=api_base,
+        azure_endpoint=os.getenv('api_base'),
         openai_api_version=api_version,
         deployment_name=deployment_name,
         openai_api_key=api_key,
@@ -36,13 +39,13 @@ def lookup(name: str) -> str:
     prompt_template = PromptTemplate(
         template=template, input_variables=["name_of_person"]
     )
-    tools_for_agent = [
-        Tool(
-            name="Crawl Google 4 linkedin profile page",
-            func=get_profile_url_tavily,
-            description="useful for when you need get the Linkedin Page URL",
-        )
-    ]
+    # tools_for_agent = [
+    #     Tool(
+    #         name="Crawl Google 4 linkedin profile page",
+    #         func=get_profile_url_tavily,
+    #         description="useful for when you need get the Linkedin Page URL",
+    #     )
+    # ]
 
     react_prompt = hub.pull("hwchase17/react")
     agent = create_react_agent(llm=llm, tools=tools_for_agent, prompt=react_prompt)

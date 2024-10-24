@@ -15,3 +15,21 @@
 
 - これらのスクレイピングした情報を、Les1で作成したLangchainにinformationとして付加することで完成  
 
+- トークンの費用を節約するために、空のデータは出来る限り削除する.  
+    ```python
+    data = response.json()
+    data = {
+        k: v
+        for k, v in data.items()
+        if v not in ([], "", "", None)
+        and k not in ["people_also_viewed", "certifications"]
+    }
+    if data.get("groups"):
+        for group_dict in data.get("groups"):
+            group_dict.pop("profile_pic_url")
+
+    return data
+    ```
+
+
+

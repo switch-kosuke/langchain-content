@@ -25,8 +25,8 @@ if __name__=="__main__":
 
     #### LLMの初期設定
     # llm = ChatOpenAI(temperature=0, model_name="gpt-.5-turbo")
-    # llm = ChatGoogleGenerativeAI(api_key=api_key, temperature=0, model="gemini-1.5-flash",max_output_tokens=20)
-    llm = ChatOllama(model="llama3")
+    llm = ChatGoogleGenerativeAI(api_key=api_key, temperature=0, model="gemini-1.5-flash",max_output_tokens=20)
+    # llm = ChatOllama(model="llama3")
 
     #### LLMとプロンプトの結び付け
     # res = llm.invoke("Hello")  # シンプルレスポンス
