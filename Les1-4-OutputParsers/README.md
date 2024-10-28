@@ -9,6 +9,10 @@ LLMからの出力は、通常Text形式であるが、これらの出力がシ�
 - https://python.langchain.com/docs/concepts/output_parsers/
 - https://python.langchain.com/docs/how_to/output_parser_structured/
 
+## 1.1. 何が起こっているの？
+プロンプトの中に組み込んでいるだけ(個人的見解).  
+ただ単純に、LangChainがLLMに対して出力フォーマットを指定しているだけ。
+
 ## 2. Code
 
 
