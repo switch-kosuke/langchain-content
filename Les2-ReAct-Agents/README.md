@@ -200,3 +200,53 @@ tool='get_text_length' tool_input="'DOG'" log="I need to determine the length of
 get_text_length enter with text="'DOG'"
 observation=3
 ```
+
+この時点で、  
+1. LLMは回答を生成するか
+2. 思考を繰り返すか  
+を判断する（Loop）
+
+### 1.6. ReAct Loop
+Prompt内  
+```python
+Prompt = """~~~
+Begin!
+    
+Question: {input}
+Thought: {agent_scratchpad}
+"""
+```
+
+- agent_scratchpad  
+    この中に、ReActの実行でこれまでに得たすべての履歴と全ての情報が含まれることになる.  
+
+```python
+intermediate_steps = []
+format_log_to_str
+agent_step: Union[AgentAction, AgentFinish] = agent.invoke(
+    {
+        "input": "What is the length of the word: DOG",
+        "agent_scratchpad": lambda x: format_log_to_str(x["agent_scratchpad"]),
+    }
+)
+
+print(agent_step)
+if isinstance(agent_step, AgentAction):
+    tool_name = agent_step.tool
+    tool_to_use = find_tool_by_name(tools, tool_name)
+    tool_input = agent_step.tool_input
+    observation = tool_to_use.func(str(tool_input))
+    print(f"{observation=}")
+    intermediate_steps.append((agent_step, str(observation)))
+```
+
+- intermediate_steps  
+    中間ステップ。履歴を保持する中間ステップとしての役割.  
+
+- format_log_to_str
+    この関数では、LOG（Agentが決定した事、どのツールを使うのか、ツールの結果）を中間ステップ分けて受け取る.  
+    そして、これらのログを全て文字列に上手くフォーマットしてくれる.  
+
+- agent_step  
+    "log='I now know the final answer.\n\nFinal Answer: The length of the word "DOG" is 3 characters.'"  
+    この出力が出た時に、出力パーサーは最終的な回答を得たと判断する.  
