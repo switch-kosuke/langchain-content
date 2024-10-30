@@ -16,15 +16,19 @@ load_dotenv()
 if __name__ == "__main__":
     print(" Retrieving...")
 
-    embeddings = OpenAIEmbeddings()
+    embeddings = AzureOpenAIEmbeddings(
+        model = os.getenv('MODEL_NAME'),
+        azure_endpoint = os.getenv('API_BASE'),
+        api_key= os.getenv('API_KEY'),
+        openai_api_version= os.getenv('API_VERSION')
+    )
+
     llm = AzureChatOpenAI(
-        temperature=0, stop = ["\nObservation", "Observation"],
         azure_endpoint=os.getenv('api_base'),
         openai_api_version=os.getenv('api_version'),
         deployment_name=os.getenv('deployment_name'),
         openai_api_key=os.getenv('api_key'),
         openai_api_type="azure",
-        callbacks = [AgentCallbackHandler()]
     )
 
     query = "what is Pinecone in machine learning?"
