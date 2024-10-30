@@ -165,7 +165,112 @@ res = agent.invoke({"input":"What is the length of 'DOG' in characters"})
     この関数は、「Action」と「Action Input」という返答が来ることを想定されている.  
     もし、指定の返答以外の場合にはエラーが発生してしまう.  
 
+### 1.4.1 How to choose the tools by LLM([callbacks.py]())
+LLMは使うべきツールをどのように判断して、答えの真偽をどうやって判断しているのかについてのロジックについて説明.  
+なぜ、このプロンプトで正確に動作しているのかを知る必要がある.   
+ 参考：https://python.langchain.com/v0.1/docs/modules/callbacks/
+
+LangChainのCallbackロジックをLLMの初期設定にいれることで、LLMが動作する全てのタイミングにおいて実行される.  
+
+
+```python 
+class AgentCallbackHandler(BaseCallbackHandler):
+    def on_llm_start(
+        self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any
+    ) -> Any:
+        """Run when LLM starts running."""
+        print(f"***Prompt to LLM was:***\n{prompts[0]}")
+        print("*********")
+
+    def on_llm_end(self, response: LLMResult, **kwargs: Any) -> Any:
+        """Run when LLM ends running."""
+        print(f"***LLM Response:***\n{response.generations[0][0].text}")
+        print("*********")
+
+llm = AzureChatOpenAI(
+        temperature=0, stop = ["\nObservation", "Observation"], callbacks = [AgentCallbackHandler]
+    )
+
+```
+このcallbacksを組み込むことで、LLMの思考を以下のように読み取る事が出来る.  
+
+```bash 
+Hello ReAct LangChain!
+***Prompt to LLM was:***
+Human: 
+    Answer the following questions as best you can. You have access to the following tools:
+
+    get_text_length(text: str) -> int - Returns the length of a text by characters
+    
+    Use the following format:
+    
+    Question: the input question you must answer
+    Thought: you should always think about what to do
+    Action: the action to take, should be one of [get_text_length]
+    Action Input: the input to the action
+    Observation: the result of the action
+    ... (this Thought/Action/Action Input/Observation can repeat N times)
+    Thought: I now know the final answer
+    Final Answer: the final answer to the original input question
+    
+    Begin!
+    
+    Question: What is the length of the word: DOG
+    Thought: 
+    
+*********
+***LLM Response:***
+The length of the word "DOG" can be determined by counting the number of characters in it.
+Action: get_text_length
+Action Input: "DOG"
+*********
+tool='get_text_length' tool_input='DOG' log='The length of the word "DOG" can be determined by counting the number of characters in it.\nAction: get_text_length\nAction Input: "DOG"'
+get_text_length enter with text='DOG'
+observation=3
+***Prompt to LLM was:***
+Human: 
+    Answer the following questions as best you can. You have access to the following tools:
+
+    get_text_length(text: str) -> int - Returns the length of a text by characters
+    
+    Use the following format:
+    
+    Question: the input question you must answer
+    Thought: you should always think about what to do
+    Action: the action to take, should be one of [get_text_length]
+    Action Input: the input to the action
+    Observation: the result of the action
+    ... (this Thought/Action/Action Input/Observation can repeat N times)
+    Thought: I now know the final answer
+    Final Answer: the final answer to the original input question
+    
+    Begin!
+    
+    Question: What is the length of the word: DOG
+    Thought: The length of the word "DOG" can be determined by counting the number of characters in it.
+Action: get_text_length
+Action Input: "DOG"
+Observation: 3
+Thought: 
+    
+*********
+***LLM Response:***
+I now know the final answer.
+Final Answer: The length of the word "DOG" is 3 characters.
+*********
+return_values={'output': 'The length of the word "DOG" is 3 characters.'} log='I now know the final answer.\nFinal Answer: The length of the word "DOG" is 3 characters.'
+### AgentFinish ###
+{'output': 'The length of the word "DOG" is 3 characters.'}
+```
+
+この時、ReAct Agentが、なぜ思考の停止を出来るのかの鍵は、「stop = ["\nObservation", "Observation"]」にある. LLMは、Observationという単語が出てきた時点で、思考を停止する.  
+それによって、必要なアクションの情報のみで思考を停止する事が出来るのだ.  
+
+
+
+
 ここまでで、実行する関数の選択は決まった.  
+関数を選択するロジックは、[Les2-2]
 
 ### 1.5. Tool Executor
 
