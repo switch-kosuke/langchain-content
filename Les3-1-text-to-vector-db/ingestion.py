@@ -17,7 +17,7 @@ if __name__ == "__main__":
     print(" Retrieving...")
 
     embeddings = OpenAIEmbeddings()
-    llm = ChatOpenAI()
+    
 
     query = "what is Pinecone in machine learning?"
     chain = PromptTemplate.from_template(template=query) | llm
