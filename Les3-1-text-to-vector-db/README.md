@@ -7,6 +7,8 @@
 3. それらのチャンクを埋め込んでベクターに変換.  
 4. そのベクターをpineconeのベクターストアに保存する.  
 
+![alt text](./images/image4.png)
+
 ### 1. メディアインポート
 - LangChain Document Loader  
     [Document Loader](https://python.langchain.com/v0.1/docs/modules/data_connection/document_loaders/)は、LLMでドキュメントの内容を消化できるように、データロードして処理する方法をクラスで実装したもの.  
